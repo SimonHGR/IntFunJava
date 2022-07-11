@@ -5,9 +5,36 @@ import students.Student;
 import java.util.ArrayList;
 import java.util.List;
 
+interface Criterion<E> {
+  boolean test(E s);
+}
+
+class SmartStudent implements Criterion<Student> {
+  private double threshold;
+
+  public SmartStudent(double threshold) {
+    this.threshold = threshold;
+  }
+
+  @Override
+  public boolean test(Student s) {
+    return s.getGpa() > threshold;
+  }
+}
+
+class EnthusiasticStudent implements Criterion<Student> {
+
+  @Override
+  public boolean test(Student s) {
+    return s.getCourses().size() > 1;
+  }
+}
+
 public class School {
-  public static void showAllStudents(List<Student> ls) {
-    for (Student s : ls) {
+  public static void showAllStudents(Iterable<?> ls) {
+//    ls.add(new Object());
+//    ls.add("Bad!");
+    for (Object s : ls) {
       System.out.println("> " + s);
     }
   }
@@ -21,27 +48,42 @@ public class School {
 //    }
 //  }
 //
-  public static List<Student> getSmartStudents(
-      List<Student> ls, double threshold) {
-    List<Student> results = new ArrayList<>();
-    for (Student s : ls) {
-      if (s.getGpa() > threshold) {
+//  public static List<Student> getSmartStudents(
+//      List<Student> ls, double threshold) {
+//    List<Student> results = new ArrayList<>();
+//    for (Student s : ls) {
+//      if (s.getGpa() > threshold) {
+//        results.add(s);
+//      }
+//    }
+//    return results;
+//  }
+  // "command" pattern -- pass an argument for the behavior it contains
+  // more than for the data it contains
+//  public static List<Student> getStudentsByCriterion(
+//      Iterable<Student> ls, Criterion<Student> crit) {
+//  public static <E> List<E> getStudentsByCriterion(
+  public static <E> List<E> getByCriterion(
+      Iterable<E> ls, Criterion<E> crit) {
+    List<E> results = new ArrayList<>();
+    for (E s : ls) {
+      if (crit.test(s)) {
         results.add(s);
       }
     }
     return results;
   }
 
-  public static List<Student> getEnthusiasticStudents(
-      List<Student> ls, int threshold) {
-    List<Student> results = new ArrayList<>();
-    for (Student s : ls) {
-      if (s.getCourses().size() > threshold) {
-        results.add(s);
-      }
-    }
-    return results;
-  }
+//  public static List<Student> getEnthusiasticStudents(
+//      List<Student> ls, int threshold) {
+//    List<Student> results = new ArrayList<>();
+//    for (Student s : ls) {
+//      if (s.getCourses().size() > threshold) {
+//        results.add(s);
+//      }
+//    }
+//    return results;
+//  }
 
   public static void main(String[] args) {
     List<Student> roster = List.of(
@@ -56,17 +98,17 @@ public class School {
 //    School.threshold = 3.5;
 //    showSmartStudents(roster);
 //    showSmartStudents(roster, 3.0);
+//    showAllStudents(getSmartStudents(roster, 3.5));
 
-    showAllStudents(getSmartStudents(roster, 3.5));
+    showAllStudents(getByCriterion(roster, new SmartStudent(3.5)));
     System.out.println("Marketing-smart:");
 //    School.threshold = 2.0;
 //    showSmartStudents(roster);
 //    showSmartStudents(roster, 2.0);
-    showAllStudents(getSmartStudents(roster, 2.0));
+    showAllStudents(getByCriterion(roster, new SmartStudent(2.0)));
 
     System.out.println("Enthusiastic:");
-    showAllStudents(getEnthusiasticStudents(roster, 1));
-
-
+//    showAllStudents(getEnthusiasticStudents(roster, 1));
+    showAllStudents(getByCriterion(roster, new EnthusiasticStudent()));
   }
 }
