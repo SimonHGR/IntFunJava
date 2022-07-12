@@ -95,6 +95,6 @@ public class UseSuperIterable {
     names
         .filter(s -> s.length() > 3)
         .map(s -> s.toUpperCase())
-        .toEvery(s -> System.out.println("more lambda: " + s));
+        .forEach(s -> System.out.println("more lambda: " + s));
   }
 }

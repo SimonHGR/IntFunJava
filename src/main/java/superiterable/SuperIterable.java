@@ -32,11 +32,13 @@ public class SuperIterable<E> implements Iterable<E> {
     return new SuperIterable<>(results);
   }
 
-  public void toEvery(Consumer<E> op) {
-    for (E e : this.self) {
-      op.accept(e);
-    }
-  }
+  // this is equivalent (mostly) to forEach, which is
+  // an integral part of Iterable (and some others)
+//  public void toEvery(Consumer<E> op) {
+//    for (E e : this.self) {
+//      op.accept(e);
+//    }
+//  }
 
   @Override
   public Iterator<E> iterator() {
