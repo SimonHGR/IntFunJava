@@ -4,7 +4,10 @@ import students.Student;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
+// this interface is essentially equivalent to
+// Predicate<E>
 interface Criterion<E> {
   boolean test(E s);
 }
@@ -30,6 +33,14 @@ class EnthusiasticStudent implements Criterion<Student> {
   }
 }
 
+
+class UpperCaser implements UnaryOperator<Student> {
+
+  @Override
+  public Student apply(Student s) {
+    return s.withName(s.getName().toUpperCase());
+  }
+}
 public class School {
   public static void showAllStudents(Iterable<?> ls) {
 //    ls.add(new Object());
@@ -74,6 +85,24 @@ public class School {
     return results;
   }
 
+  public static <E> List<E> updateWith(
+      Iterable<E> in, UnaryOperator<E> operation) {
+    List<E> results = new ArrayList<>();
+    for (E s : in) {
+      results.add(operation.apply(s));
+    }
+    return results;
+  }
+
+//  public static List<Student> updateWith(
+//      Iterable<Student> in, UnaryOperator<Student> operation) {
+//    List<Student> results = new ArrayList<>();
+//    for (Student s : in) {
+//      results.add(operation.apply(s));
+//    }
+//    return results;
+//  }
+//
 //  public static List<Student> getEnthusiasticStudents(
 //      List<Student> ls, int threshold) {
 //    List<Student> results = new ArrayList<>();
@@ -110,5 +139,9 @@ public class School {
     System.out.println("Enthusiastic:");
 //    showAllStudents(getEnthusiasticStudents(roster, 1));
     showAllStudents(getByCriterion(roster, new EnthusiasticStudent()));
+
+    System.out.println("Uppercase names");
+    showAllStudents(updateWith(roster, new UpperCaser()));
+
   }
 }

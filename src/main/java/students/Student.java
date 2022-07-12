@@ -51,6 +51,11 @@ public class Student {
     return new Student(this.name, newGpa, this.courses);
   }
 
+  public Student withName(String name) {
+    return new Student(name, this.gpa, this.courses);
+  }
+
+
 
   // if caller calls this as:
   // String [] courses = {"Math", "Physics"};
