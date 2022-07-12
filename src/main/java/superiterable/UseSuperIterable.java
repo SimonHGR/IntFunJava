@@ -48,8 +48,8 @@ public class UseSuperIterable {
 //    });
     System.out.println("------------");
     // Consumer of String is an interface (that's a rule for what's next)
-    // IFF that interface declares EXACTLY ONE abstract method
-    // AND we only wish to implement that abstract method
+    // If that interface declares EXACTLY ONE abstract method
+    // AND we only wish to implement that abstract method (and NOT OTHERWISE)
     // "OBVIOUSLY" the one abstract method's name can be determined by
     // inspection
     // and the "method body" that we provide must be compatible
@@ -60,12 +60,41 @@ public class UseSuperIterable {
 //        System.out.println("anonymous inner: " + s);
 //      }
 //    /*}*/);
-    names.toEvery( (String s) -> {
-        System.out.println("anonymous inner: " + s);
-      } );
+//    names.toEvery( (String s) -> {
+//        System.out.println("anonymous inner: " + s);
+//      } );
 
+    // (String s, Integer i) or (s, i) BUT NOT (String s, i) nor (s, Integer i)
+    // if type inference is possible (since Java 11 I think :) :
+    // (var s, var i) or (s, i) BUT NOT (var s, i)
+    //    nor (s, var i) nor (String s, var i)
+    //    var is permitted to allow annotation (@NotNull var s)
 
+    // block lambda
+//    names.toEvery( (s) -> {
+//        System.out.println("anonymous inner: " + s);
+//      } );
 
-    //    names.filter(...).map(...).toEvery(...)
+    // Uniquely for a single "unadorned" argument, we can leave out the parens
+    // note, zero args: () -> ...
+//    names.toEvery( s -> {
+//        System.out.println("anonymous inner: " + s);
+//      } );
+
+    // "expression lambda", where body is simply a "return expression"
+    // or single void expression, can leave out everthing in the body
+    // except that expression (i.e. no return, or terminating semicolon)
+//    names.toEvery( s -> System.out.println("lambda: " + s) );
+
+//    names
+//        .filter(s -> s.length() > 3)
+////        .map(s -> { return s.toUpperCase();})
+//        .map(s -> s.toUpperCase())
+//        .toEvery(s -> System.out.println("more lambda: " + s));
+
+    names
+        .filter(s -> s.length() > 3)
+        .map(s -> s.toUpperCase())
+        .toEvery(s -> System.out.println("more lambda: " + s));
   }
 }
