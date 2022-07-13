@@ -32,6 +32,17 @@ public class SuperIterable<E> implements Iterable<E> {
     return new SuperIterable<>(results);
   }
 
+  public <F> SuperIterable<F> flatMap(Function<E, SuperIterable<F>> op) {
+    List<F> results = new ArrayList<>();
+    for (E e : this.self) {
+      SuperIterable<F> manyF = op.apply(e);
+      for (F f : manyF) {
+        results.add(f);
+      }
+    }
+    return new SuperIterable<>(results);
+  }
+
   // this is equivalent (mostly) to forEach, which is
   // an integral part of Iterable (and some others)
 //  public void toEvery(Consumer<E> op) {

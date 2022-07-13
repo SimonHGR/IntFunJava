@@ -66,12 +66,21 @@ public class LabExample {
         .filter(s -> s.getName().length() > 4)
         .anyMatch(s -> s.getGpa() > 3.5);
     System.out.println("Is a student with a long name smart? " + someoneIsSmart);
+    System.out.println("-------------------------");
+    // Monad - flatMap
+    // Functor - map
+    roster.stream()
+        .flatMap(s -> s.getCourses().stream())
+        .distinct()
+        .sorted()
+        .forEach(s -> System.out.println(s));
 
-    Object obj = (Predicate<Student> & Serializable) s -> s.getGpa() > 3.5;
-    System.out.println("obj is a " + obj.getClass().getName());
-    Method[] methods = obj.getClass().getMethods();
-    for (Method m : methods) {
-      System.out.println("> " + m);
-    }
+
+//    Object obj = (Predicate<Student> & Serializable) s -> s.getGpa() > 3.5;
+//    System.out.println("obj is a " + obj.getClass().getName());
+//    Method[] methods = obj.getClass().getMethods();
+//    for (Method m : methods) {
+//      System.out.println("> " + m);
   }
 }
+
