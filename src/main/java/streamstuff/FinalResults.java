@@ -1,6 +1,7 @@
 package streamstuff;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FinalResults {
   public static void main(String[] args) {
@@ -18,5 +19,46 @@ public class FinalResults {
         Student.of("Shuri", 5.0, "Adv Physics", "Adv Engineering", "Adv AI"),
         Student.of("Black Panther", 3.5, "Gym", "Martial Arts", "History of Waconda")
     );
+
+    var res = roster.stream()
+        // more sensibly
+//        .flatMap(s -> s.getCourses().stream())
+        .map(Student::getCourses)
+        .flatMap(List::stream)
+        .collect(Collectors.toSet());
+    System.out.println(res);
+    res.forEach(System.out::println);
+    System.out.println("-------------------------");
+    roster.stream()
+        .collect(Collectors.groupingBy(FinalResults::getLetterGrade))
+        .entrySet().stream()
+        .forEach(System.out::println);
+
+    System.out.println("-------------------------");
+    roster.stream()
+        .collect(Collectors.groupingBy(FinalResults::getLetterGrade,
+            Collectors.mapping(s -> s.getName(),
+                Collectors.joining( ", ", "Students with this grade are: ", ""))))
+        .entrySet().stream()
+        .forEach(System.out::println);
+
+    System.out.println("-------------------------");
+    roster.stream()
+        .collect(Collectors.groupingBy(FinalResults::getLetterGrade,
+                Collectors.counting()))
+        .entrySet().stream()
+        .map(e -> "There are " + e.getValue()
+            + " students with grade " + e.getKey())
+        .forEach(System.out::println);
+
+  }
+
+  public static String getLetterGrade(Student s) {
+    double grade = s.getGpa();
+    if (grade > 3.5) return "A";
+    if (grade > 3) return "B";
+    if (grade > 2) return "C";
+    if (grade > 1) return "D";
+    return "E";
   }
 }
