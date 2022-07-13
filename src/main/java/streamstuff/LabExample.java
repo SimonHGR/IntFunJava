@@ -75,6 +75,21 @@ public class LabExample {
         .sorted()
         .forEach(s -> System.out.println(s));
 
+    System.out.println("-------------------------");
+    roster.stream()
+//        .flatMap((Student s) -> {
+//          // s is in scope!
+//          return s.getCourses().stream()
+//              .map(c -> {
+//                return "Student " + s.getName() + " takes " + c;
+//              });
+//        })
+        .flatMap(s -> s.getCourses()
+            .stream()
+            .map(c -> "Student " + s.getName() + " takes " + c)
+        )
+        .forEach(s -> System.out.println(s));
+
 
 //    Object obj = (Predicate<Student> & Serializable) s -> s.getGpa() > 3.5;
 //    System.out.println("obj is a " + obj.getClass().getName());
